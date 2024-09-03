@@ -55,14 +55,16 @@ class Seller(db.Model, SerializerMixin):
     def repr(self):
         return f"<Seller {self.business_name}>"
     
+# Category model
 class Category(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
 
-    products = db.relationship('Product', backref=db.backref('category', lazy=True))
+    # Only define the relationship here
+    products = db.relationship('Product', backref='category', lazy=True)
 
     def repr(self):
-        return f"<Category {self.name}>"    
+        return f"<Category {self.name}>"
 
 # Product model
 class Product(db.Model, SerializerMixin):
@@ -74,14 +76,14 @@ class Product(db.Model, SerializerMixin):
     stock = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(200))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    
 
     seller = db.relationship('Seller', backref=db.backref('products', lazy=True))
-    category = db.relationship('Category', backref=db.backref('products', lazy=True))
-
+    # Remove the duplicate backref here
+    # category = db.relationship('Category', backref=db.backref('products', lazy=True))
 
     def repr(self):
         return f"<Product {self.name}>"
+
 
 # Order model
 class Order(db.Model, SerializerMixin):

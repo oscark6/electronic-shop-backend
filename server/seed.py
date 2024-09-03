@@ -42,13 +42,26 @@ product_descriptions = [
 ]
 
 image_paths = [
-    "images/iphone13.jpg", "images/samsung_s21.jpg", "images/macbook_pro.jpg", 
-    "images/dell_xps13.jpg", "images/apple_watch.jpg", "images/ipad_pro.jpg", 
-    "images/surface_laptop.jpg", "images/sony_wh1000xm4.jpg", "images/bose_qc35.jpg",
-    "images/canon_eos_r5.jpg", "images/samsung_qled_tv.jpg", "images/hp_envy_printer.jpg",
-    "images/asus_rog.jpg", "images/echo_dot.jpg", "images/nest_hub.jpg",
-    "images/razer_mouse.jpg", "images/logitech_mx_master.jpg", "images/anker_powercore.jpg",
-    "images/wd_ssd.jpg", "images/tile_pro.jpg"
+    "https://media.wired.com/photos/61439ca1ea5305148f36968a/1:1/w_1211,h_1211,c_limit/Gear-iphone13_sierra_blue__2bovafkl4yaa_large_2x.jpg",
+      "https://phonesstorekenya.com/wp-content/uploads/2021/03/Samsung-S21-FE-5G-b.jpg", 
+      "https://www.apple.com/newsroom/images/product/mac/standard/Apple-MacBook-Pro-M2-Pro-and-M2-Max-hero-230117_Full-Bleed-Image.jpg.large.jpg", 
+    "https://cdn.vox-cdn.com/thumbor/JDumhAK18Dujmv5JwB13N7EGa1I=/0x0:2040x1360/2000x1333/filters:focal(1020x680:1021x681)/cdn.vox-cdn.com/uploads/chorus_asset/file/24432609/236524_Dell_XPS_13_AKrales_0016.jpg", 
+    "https://www.apple.com/newsroom/images/product/watch/standard/Apple_watch-series7_hero_09142021_big.jpg.slideshow-xlarge_2x.jpg",
+      "https://www.phoneplacekenya.com/wp-content/uploads/2024/07/Apple-iPad-Pro-11-2024-b.jpg", 
+    "https://assets2.razerzone.com/images/pnx.assets/6173ae46054c0c98f5bbf4480679b006/deathadder-essential-available-in-mobile.jpg", 
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBnsudept4CMwnvbmQynw5q3L8mxHTXifkfA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTrGQPr2KwTVhPV1efWWwrXCfs_2FzU0nU1Q&s",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlVLfXpyBua_8xYW8Gje_z7YJ6choso4RteA&s",
+      "https://melcom.com/media/catalog/product/cache/d0e1b0d5c74d14bfa9f7dd43ec52d082/1/1/113300_1.jpg", 
+      "https://www.hp.com/gb-en/shop/Html/Merch/Images/c07035233_1750x1285.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK5AE71Ll3Scp7W1uQ-5uZbESd2yy2b_tHrg&s",
+      "https://le.co.ke/wp-content/uploads/2022/04/amazon_echo_dot_3rd_gen_template_255bd639-3cf6-4915-9b8f-a1bef6dcdeb1_1500x.jpg",
+        "https://storage.googleapis.com/support-kms-prod/cvw0X96zBdApRadBDbYYf1OC8oQBqq5E8oBl",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6BYftWjO21l-lEErc52PjLmOLoyWD-DsaNg&s",
+      "https://i.rtings.com/assets/products/25W0iOu9/logitech-mx-master-2s/design-medium.jpg?format=auto",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8uhkHEN1ZUk8jVpsVM-hGDNrNjSs_aiVwBA&s",
+    "https://5.imimg.com/data5/ANDROID/Default/2023/1/SZ/UD/ZA/126788677/product-jpeg-500x500.jpg", 
+    "https://m.media-amazon.com/images/I/51XdMjYkzLL.jpg"
 ]
 
 def add_user(username, password, role):

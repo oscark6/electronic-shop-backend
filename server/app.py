@@ -104,6 +104,17 @@ def list_products():
 
     return jsonify({"products": product_list}), 200
 
+# @app.route('/products')
+# def get_products():
+#     category = request.args.get('category')
+#     if category:
+#         products = Product.query.filter_by(category=category).all()
+#     else:
+#         products = Product.query.all()
+#     return jsonify([product.to_dict() for product in products])
+
+
+
 @app.route('/seller/products', methods=['GET'])
 @jwt_required()
 def get_seller_products():
@@ -223,7 +234,7 @@ def admin_seller_decline(id):
 def admin_seller_approve(id):
     current_user = get_jwt_identity()
     if current_user['role'] != 'admin':
-        return jsonify({'message': 'Unauthorized access'}), 403
+        return jsonify({'message': 'Unauthorized access'}), 4037
 
     seller = Seller.query.get_or_404(id)
     seller.status = True  # Assuming status is a boolean field for approval
@@ -231,77 +242,117 @@ def admin_seller_approve(id):
 
     return jsonify({'message': 'Seller registration approved'}), 200
 
+
+
+
+
+
+
+# Add a product to the cart
+# @app.route('/cart', methods=['POST'])
+# @jwt_required()
+# def add_to_cart():
+#     user_identity = get_jwt_identity()
+#     customer = Customer.query.filter_by(user_id=user_identity['id']).first()
+#     if not customer:
+#         return jsonify({'msg': 'Customer not found'}), 404
+
+#     data = request.get_json()
+#     product_id = data.get('productId')
+#     quantity = data.get('quantity', 1)
+
+#     product = Product.query.get_or_404(product_id)
+
+#     cart_item = Cart.query.filter_by(customer_id=customer.id, product_id=product.id).first()
+#     if cart_item:
+#         cart_item.quantity += quantity
+#     else:
+#         cart_item = Cart(customer_id=customer.id, product_id=product.id, quantity=quantity)
+#         db.session.add(cart_item)
+
+#     db.session.commit()
+
+#     return jsonify({'msg': 'Product added to cart', 'cart_item_id': cart_item.id}), 201
+
 @app.route('/cart', methods=['POST'])
 @jwt_required()
 def add_to_cart():
     user_identity = get_jwt_identity()
-    user_id = user_identity['id'] 
+    customer = Customer.query.filter_by(user_id=user_identity['id']).first()
+    if not customer:
+        return jsonify({'msg': 'Customer not found'}), 404
+
     data = request.get_json()
     product_id = data.get('productId')
-    quantity = data.get('quantity', 1)
+    quantity = data.get('quantity', 1)  # Default to 1 if not provided
 
-    if not product_id or quantity <= 0:
-        return jsonify({'msg': 'Product ID and a positive quantity are required'}), 400
+    if not product_id or not quantity:
+        return jsonify({'msg': 'Missing productId or quantity'}), 400
 
-    customer = Customer.query.filter_by(user_id=user_id).first()
-    if not customer:
-        return jsonify({'msg': 'Customer not found'}), 404
-    
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'msg': 'Product not found'}), 404
+    product = Product.query.get_or_404(product_id)
 
-    existing_item = Cart.query.filter_by(customer_id=customer.id, product_id=product_id).first()
-    if existing_item:
-        existing_item.quantity += quantity
-        db.session.commit()
-        return jsonify({'msg': 'Product quantity updated in cart'}), 200
+    cart_item = Cart.query.filter_by(customer_id=customer.id, product_id=product.id).first()
+    if cart_item:
+        cart_item.quantity += quantity
+    else:
+        cart_item = Cart(customer_id=customer.id, product_id=product.id, quantity=quantity)
+        db.session.add(cart_item)
 
-    new_item = Cart(customer_id=customer.id, product_id=product_id, quantity=quantity)
-    db.session.add(new_item)
     db.session.commit()
 
-    return jsonify({'msg': 'Product added to cart'}), 201
+    return jsonify({'msg': 'Product added to cart', 'cart_item_id': cart_item.id}), 201
 
+
+# Get the current user's cart items
 @app.route('/cart/get', methods=['GET'])
 @jwt_required()
-def view_cart():
-    user_identity = get_jwt_identity()
-    user_id = user_identity['id']  
-
-    customer = Customer.query.filter_by(user_id=user_id).first()  
-    if not customer:
-        return jsonify({'msg': 'Customer not found'}), 404
-    
-    cart_items = Cart.query.filter_by(customer_id=customer.id).all()
-    cart_list = []
-    for item in cart_items:
-        product = Product.query.get(item.product_id)
-        cart_list.append({
-            'cart_id': item.id,
-            'product_id': product.id,
-            'product_name': product.name,
-            'quantity': item.quantity,
-            'price': product.price,
-            'total_price': product.price * item.quantity
-        })
-
-    return jsonify({'cart_items': cart_list}), 200
-
-@app.route('/cart/<int:cart_id>', methods=['DELETE'])
-@jwt_required()
-def remove_from_cart(cart_id):
+def get_cart_items():
     user_identity = get_jwt_identity()
     customer = Customer.query.filter_by(user_id=user_identity['id']).first()
-    cart_item = Cart.query.filter_by(id=cart_id, customer_id=customer.id).first()
+    if not customer:
+        return jsonify({'msg': 'Customer not found'}), 404
 
+    cart_items = Cart.query.filter_by(customer_id=customer.id).all()
+    items = [
+        {
+            'id': item.id,
+            'product_id': item.product.id,
+            'name': item.product.name,
+            'quantity': item.quantity,
+            'price': item.product.price,
+            'total': item.quantity * item.product.price,
+        }
+        for item in cart_items
+    ]
+
+    return jsonify({'cart_items': items}), 200
+
+# Remove a product from the cart
+@app.route('/cart/<int:id>', methods=['DELETE'])
+@jwt_required()
+def remove_from_cart(id):
+    user_identity = get_jwt_identity()
+    customer = Customer.query.filter_by(user_id=user_identity['id']).first()
+    if not customer:
+        return jsonify({'msg': 'Customer not found'}), 404
+
+    cart_item = Cart.query.filter_by(id=id, customer_id=customer.id).first()
     if not cart_item:
-        return jsonify({'msg': 'Item not found in cart'}), 404
+        return jsonify({'msg': 'Cart item not found'}), 404
 
     db.session.delete(cart_item)
     db.session.commit()
 
-    return jsonify({'msg': 'Item removed from cart'}), 200
+    return jsonify({'msg': 'Product removed from cart'}), 200
+
+
+
+
+
+
+
+
+
 
 @app.route('/orders', methods=['POST'])
 @jwt_required()
