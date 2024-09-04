@@ -74,7 +74,7 @@ class Product(db.Model, SerializerMixin):
     description = db.Column(db.Text, nullable=True)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String(200))
+    image_url = db.Column(db.String(200))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
     seller = db.relationship('Seller', backref=db.backref('products', lazy=True))

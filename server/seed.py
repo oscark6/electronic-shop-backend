@@ -171,7 +171,7 @@ if __name__ == '__main__':
                 description = product_descriptions[i]
                 price = round(random.uniform(10.0, 1000.0), 2)
                 stock = random.randint(1, 100)
-                image = image_paths[i]
+                image_url = image_paths[i]
 
                 product = Product(
                     seller_id=seller.id, 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
                     description=description, 
                     price=price, 
                     stock=stock, 
-                    image=image,
+                    image_url=image_url,
                     category_id=category.id
                 )
                 db.session.add(product)

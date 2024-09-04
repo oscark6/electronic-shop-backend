@@ -11,7 +11,7 @@ from datetime import datetime
 
 # Local imports
 from config import app, db, api
-from models import User, Customer, Seller, Product, Cart, Order, OrderHistory
+from models import User, Customer, Seller, Product, Cart, Order, OrderHistory, Category
 
 # Initialize app components
 db.init_app(app)
@@ -94,15 +94,47 @@ def register():
 
     return jsonify({"message": "User registered successfully!"}), 201
 
+@app.route('/categories/products', methods=['GET'])
+def get_all_categories_with_products():
+    categories = Category.query.all()
+    response = []
+
+    for category in categories:
+        category_data = {
+            'id': category.id,
+            'name': category.name,
+
+            # Add any other fields from the Category model that you need
+        }
+        category_data['products'] = []
+
+        for product in category.products:
+            product_data = {
+                'id': product.id,
+                'name': product.name,
+                'description': product.description,
+                'price': product.price,
+                'image_url': product.image_url,
+                # Add any other fields from the Product model that you need
+            }
+            category_data['products'].append(product_data)
+
+        response.append(category_data)
+
+    return jsonify(response), 200
 
 
-@app.route('/products', methods=['GET'])
-def list_products():
-    products = Product.query.all()
-    product_list = [{"id": p.id, "name": p.name, "description": p.description,
-                     "price": p.price, "stock": p.stock, "image": p.image} for p in products]
 
-    return jsonify({"products": product_list}), 200
+@app.route('/categories', methods=['GET'])
+def get_categories():
+    categories = Category.query.all()
+    return jsonify([category.to_dict() for category in categories]), 200
+
+# Route to get products by category id
+@app.route('/categories/<int:category_id>/products', methods=['GET'])
+def get_products_by_category(category_id):
+    products = Product.query.filter_by(category_id=category_id).all()
+    return jsonify([product.to_dict() for product in products]), 200
 
 # @app.route('/products')
 # def get_products():
