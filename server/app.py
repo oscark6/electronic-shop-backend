@@ -43,10 +43,12 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
+    print(data)
     username = data.get('username')
     password = data.get('password')
     role = data.get('role')
-
+    print(password,role,username)
+    
     if not username or not password or not role:
         return jsonify({"message": "Missing required fields"}), 400
 
@@ -311,12 +313,13 @@ def admin_seller_approve(id):
 def add_to_cart():
     user_identity = get_jwt_identity()
     customer = Customer.query.filter_by(user_id=user_identity['id']).first()
+    print(customer)
     if not customer:
         return jsonify({'msg': 'Customer not found'}), 404
 
     data = request.get_json()
     product_id = data.get('productId')
-    quantity = data.get('quantity', 1)  # Default to 1 if not provided
+    quantity = data.get('quantity', 1)
 
     if not product_id or not quantity:
         return jsonify({'msg': 'Missing productId or quantity'}), 400
@@ -334,7 +337,6 @@ def add_to_cart():
 
     return jsonify({'msg': 'Product added to cart', 'cart_item_id': cart_item.id}), 201
 
-
 # Get the current user's cart items
 @app.route('/cart/get', methods=['GET'])
 @jwt_required()
@@ -350,6 +352,7 @@ def get_cart_items():
             'id': item.id,
             'product_id': item.product.id,
             'name': item.product.name,
+            'image':item.product.image,
             'quantity': item.quantity,
             'price': item.product.price,
             'total': item.quantity * item.product.price,

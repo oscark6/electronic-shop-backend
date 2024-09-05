@@ -30,4 +30,4 @@ db = SQLAlchemy(metadata=metadata)
 api = Api(app)
 
 # Instantiate CORS
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})
